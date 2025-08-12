@@ -1,0 +1,3 @@
+[console_scripts]
+activity = src.main:main
+

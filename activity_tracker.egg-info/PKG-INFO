@@ -1,0 +1,58 @@
+Metadata-Version: 2.1
+Name: activity-tracker
+Version: 0.1.0
+Summary: A CLI application to track application usage and display summaries.
+Home-page: https://github.com/yourusername/activity-tracker
+Author: Your Name
+Author-email: your.email@example.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: MacOS :: MacOS X
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+
+# Activity Tracker
+
+A CLI application to track application usage and display summaries.
+
+## Installation
+
+```bash
+pip install .
+```
+
+## Usage
+
+### Start Tracking
+
+```bash
+activity track
+```
+
+### Daily Summary
+
+```bash
+activity daily
+```
+
+### Weekly Summary
+
+```bash
+activity weekly
+```
+
+### Monthly Summary
+
+```bash
+activity monthly
+```
+
+### Yearly Summary
+
+```bash
+activity yearly
+```
+
+
