@@ -2,6 +2,8 @@
 
 A CLI application to track application usage and display summaries.
 
+![Activity Tracker Screenshot](screenshot.jpeg)
+
 ## Installation
 
 ```bash
