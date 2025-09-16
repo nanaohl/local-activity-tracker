@@ -1,8 +1,12 @@
 
+import os
 import sqlite3
 from datetime import datetime
 
-DATABASE_NAME = "activity.db"
+# Get the absolute path to the directory where this script is located
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# Define the absolute path for the database file
+DATABASE_NAME = os.path.join(SCRIPT_DIR, "..", "activity.db")
 
 def create_table():
     """Creates the activity table in the database if it doesn't exist."""

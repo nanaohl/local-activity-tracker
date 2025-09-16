@@ -10,6 +10,7 @@ setup(
     install_requires=[
         "pyobjc-core",
         "tabulate",
+        "Flask",
     ],
     entry_points={
         "console_scripts": [
