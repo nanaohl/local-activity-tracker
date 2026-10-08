@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary · Activity Tracker</title>
+    <link rel="stylesheet" href="/static/timeline.css">
+    <link rel="stylesheet" href="/static/summary.css">
+</head>
+<body>
+<nav class="app-nav">
+    <span class="brand">Activity Tracker</span>
+    <a href="/" id="navTimeline">Timeline</a>
+    <a href="/summary" class="active" id="navSummary">Summary</a>
+</nav>
+<main class="card">
+    <header class="summary-top">
+        <div class="segmented" role="tablist" aria-label="Period">
+            <button type="button" data-period="day">Day</button>
+            <button type="button" data-period="week">Week</button>
+            <button type="button" data-period="month">Month</button>
+        </div>
+        <div class="period-nav">
+            <button id="prevBtn" class="btn-outline btn-icon" type="button" title="Previous">&lsaquo;</button>
+            <h1 id="periodLabel">&nbsp;</h1>
+            <button id="nextBtn" class="btn-outline btn-icon" type="button" title="Next">&rsaquo;</button>
+            <button id="todayBtn" class="btn-outline" type="button">Today</button>
+        </div>
+        <label class="toggle" title="Time when the tracker couldn't read the frontmost app, usually while the screen was locked.">
+            <input id="unidentifiedInput" type="checkbox"> Include unidentified time
+        </label>
+    </header>
+
+    <section class="tiles">
+        <div class="tile">
+            <div class="tile-label">Tracked time</div>
+            <div class="tile-value" id="tileTracked">–</div>
+            <div class="tile-sub" id="tileTrackedSub">&nbsp;</div>
+        </div>
+        <div class="tile">
+            <div class="tile-label">Active time</div>
+            <div class="tile-value" id="tileActive">–</div>
+            <div class="tile-sub" id="tileActiveSub">&nbsp;</div>
+        </div>
+        <div class="tile">
+            <div class="tile-label" id="tileThirdLabel">Daily average</div>
+            <div class="tile-value" id="tileThird">–</div>
+            <div class="tile-sub" id="tileThirdSub">&nbsp;</div>
+        </div>
+        <div class="tile">
+            <div class="tile-label" id="tileBusiestLabel">Busiest day</div>
+            <div class="tile-value" id="tileBusiest">–</div>
+            <div class="tile-sub" id="tileBusiestSub">&nbsp;</div>
+        </div>
+    </section>
+
+    <section class="chart-section">
+        <div class="chart-head">
+            <h2 id="chartTitle">Time by day</h2>
+            <ul id="legend" class="legend"></ul>
+        </div>
+        <div class="chart" id="chart">
+            <div class="y-axis" id="yAxis"></div>
+            <div class="plot" id="plot"></div>
+            <div class="x-axis" id="xAxis"></div>
+        </div>
+        <div id="tooltip" class="tooltip chart-tooltip" hidden></div>
+    </section>
+
+    <section class="breakdown">
+        <div class="breakdown-main">
+            <h2>Where time went</h2>
+            <table class="apps-table">
+                <thead>
+                    <tr>
+                        <th>App</th>
+                        <th class="share-col">Share</th>
+                        <th class="right">Time</th>
+                        <th class="right">Idle</th>
+                    </tr>
+                </thead>
+                <tbody id="appsBody"></tbody>
+            </table>
+            <button id="showAllBtn" class="btn-text show-all" type="button" hidden></button>
+            <p id="emptyState" class="empty" hidden>No activity recorded in this period.</p>
+        </div>
+        <aside class="breakdown-side">
+            <h2 id="sideTitle">Top websites</h2>
+            <ol id="sideList" class="side-list"></ol>
+        </aside>
+    </section>
+</main>
+<script src="/static/common.js"></script>
+<script src="/static/summary.js"></script>
+</body>
+</html>

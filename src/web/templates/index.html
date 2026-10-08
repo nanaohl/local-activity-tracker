@@ -1,26 +1,137 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activity Tracker</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/timeline.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Activity Tracker</h1>
-        <div class="buttons">
-            <button id="dailyBtn">Daily</button>
-            <button id="weeklyBtn">Weekly</button>
-            <button id="monthlyBtn">Monthly</button>
-            <button id="yearlyBtn">Yearly</button>
+<nav class="app-nav">
+    <span class="brand">Activity Tracker</span>
+    <a href="/" class="active" id="navTimeline">Timeline</a>
+    <a href="/summary" class="" id="navSummary">Summary</a>
+</nav>
+<main class="card">
+    <header class="top">
+        <div class="recording">
+            <div class="recording-row">
+                <button id="recordBtn" class="btn-primary" type="button">Start recording</button>
+                <span class="info" title="Tracks the frontmost app, window title, browser URL and idle time once per second.">i</span>
+            </div>
+            <p class="note">Only you can see the tracked activity.<br>Records are stored locally on this Mac.</p>
         </div>
-        <div class="chart-container">
-            <canvas id="activityChart"></canvas>
+
+        <dl class="stats">
+            <div><dt>Started</dt><dd id="statStarted">--:--</dd></div>
+            <div><dt>Finished</dt><dd id="statFinished">--:--</dd></div>
+            <div><dt>Duration</dt><dd id="statDuration">--:--</dd></div>
+        </dl>
+
+        <div class="date-controls">
+            <button id="prevDayBtn" class="btn-outline btn-icon" type="button" title="Previous day">&lsaquo;</button>
+            <button id="todayBtn" class="btn-outline" type="button">Today</button>
+            <input id="dateInput" class="date-input" type="date">
+            <button id="nextDayBtn" class="btn-outline btn-icon" type="button" title="Next day">&rsaquo;</button>
         </div>
+    </header>
+
+    <section class="timeline-wrap">
+        <div id="timeline" class="timeline" aria-label="Timeline for the day">
+            <div id="timelineSegments" class="segments"></div>
+            <div id="timelineBrush" class="brush" hidden></div>
+            <div id="timelineNow" class="now-line" hidden></div>
+        </div>
+        <div id="timelineHours" class="hours"></div>
+        <div id="rangeChip" class="range-chip" hidden>
+            <span id="rangeLabel"></span>
+            <button id="clearRangeBtn" type="button" title="Clear time range">&times;</button>
+        </div>
+        <div id="tooltip" class="tooltip" hidden></div>
+    </section>
+
+    <section class="panels">
+        <div class="panel panel-main">
+            <div class="toolbar">
+                <input id="searchInput" class="search" type="search" placeholder="Search">
+                <span class="info" title="Search by app, window title or URL. Drag across the timeline to filter by time.">i</span>
+                <button id="addBtn" class="btn-text" type="button" disabled>Add Selected</button>
+                <button id="ticketBtn" class="btn-text" type="button" disabled aria-haspopup="dialog">Assign Ticket</button>
+                <button id="mergeBtn" class="btn-text" type="button" disabled>Merge Selected</button>
+                <button id="deleteBtn" class="btn-text" type="button" disabled>Delete Selected</button>
+                <label class="toggle"><input id="hideShortInput" type="checkbox" checked> Hide &lt; 30s</label>
+            </div>
+            <div class="table-scroll">
+                <table class="entries">
+                    <thead>
+                        <tr>
+                            <th class="col-check"><input id="selectAllInput" type="checkbox" aria-label="Select all"></th>
+                            <th data-sort="app">App</th>
+                            <th data-sort="title">Description</th>
+                            <th data-sort="url">URL</th>
+                            <th data-sort="ticket">Ticket</th>
+                            <th data-sort="start">Start</th>
+                            <th data-sort="end">End time</th>
+                            <th data-sort="duration">Duration</th>
+                            <th data-sort="idle">Idle</th>
+                            <th data-sort="added">Added</th>
+                        </tr>
+                    </thead>
+                    <tbody id="entriesBody"></tbody>
+                </table>
+                <p id="emptyState" class="empty" hidden>No activity recorded for this day.</p>
+            </div>
+        </div>
+
+        <div class="panel panel-group">
+            <div class="toolbar"><span class="group-title">Group view</span></div>
+            <div class="table-scroll">
+                <table class="groups">
+                    <thead>
+                        <tr>
+                            <th class="col-check"><input id="selectAllGroupsInput" type="checkbox" aria-label="Select all apps"></th>
+                            <th>App</th>
+                            <th>Use</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="groupsBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div id="ticketPicker" class="picker" role="dialog" aria-label="Assign ClickUp ticket" hidden>
+        <div id="pickerConnect" class="picker-connect" hidden>
+            <p class="picker-heading">Connect ClickUp</p>
+            <p class="picker-note">Paste your personal API token from
+                <a href="https://app.clickup.com/settings/apps" target="_blank" rel="noopener">ClickUp → Settings → Apps</a>.
+                It is stored in your macOS Keychain.</p>
+            <form id="pickerConnectForm" class="picker-connect-form">
+                <input id="pickerTokenInput" class="search" type="password" placeholder="pk_…" autocomplete="off" required>
+                <button class="btn-primary" type="submit">Connect</button>
+            </form>
+        </div>
+        <div id="pickerTasks">
+            <input id="pickerSearch" class="search picker-search" type="search"
+                   placeholder="Search tasks or paste a ClickUp link / ID" autocomplete="off">
+            <div id="pickerList" class="picker-list" role="listbox"></div>
+            <div class="picker-footer">
+                <button id="pickerRemoveBtn" class="btn-text" type="button">Remove ticket</button>
+                <button id="pickerRefreshBtn" class="btn-text" type="button" title="Reload tasks from ClickUp">Refresh</button>
+            </div>
+        </div>
+        <p id="pickerError" class="picker-error" hidden></p>
     </div>
-    <script src="/static/script.js"></script>
+
+    <footer class="details">
+        <span>Details:</span>
+        <span id="detailSelected">Selected 0/0</span>
+        <span class="sep"></span>
+        <span id="detailTotal">Total 0h 00m</span>
+    </footer>
+</main>
+<script src="/static/common.js"></script>
+<script src="/static/timeline.js"></script>
 </body>
 </html>

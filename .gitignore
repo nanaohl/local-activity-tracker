@@ -3,6 +3,7 @@ activity.db
 
 # Python virtual environment
 venv/
+.venv/
 
 # Build artifacts
 build/
@@ -12,3 +13,6 @@ dist/
 # Python cache
 **/__pycache__/
 *.pyc
+# Tracker runtime
+tracker.pid
+server.log

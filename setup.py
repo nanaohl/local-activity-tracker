@@ -9,6 +9,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "pyobjc-core",
+        "pyobjc-framework-WebKit",
         "tabulate",
         "Flask",
     ],
