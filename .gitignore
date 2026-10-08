@@ -16,3 +16,6 @@ dist/
 # Tracker runtime
 tracker.pid
 server.log
+
+# macOS
+.DS_Store
